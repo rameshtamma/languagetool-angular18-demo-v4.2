@@ -1,0 +1,139 @@
+<div class="page">
+  <header class="hdr">
+    <h1>LanguageTool Grammar Demo</h1>
+    <p>Type text → Check Grammar → Tab through errors → pick a correction</p>
+  </header>
+
+  <section class="editor-card">
+    <div class="toolbar">
+      <button (click)="check()" [disabled]="isChecking">Check Grammar</button>
+      <button (click)="clear()" class="secondary">Clear</button>
+      <span class="status" *ngIf="isChecking">Checking…</span>
+      <span class="error" *ngIf="errorMsg">{{ errorMsg }}</span>
+    </div>
+
+    <div class="editor-wrap">
+      <!-- Highlight layer -->
+      <div #hl class="highlights" aria-hidden="true">
+        <ng-container *ngFor="let seg of segments">
+          <mark *ngIf="seg.kind==='error'" class="hl-error" [title]="segmentTitle(seg)">{{ seg.value }}</mark>
+          <span *ngIf="seg.kind==='text'" class="hl-text">{{ seg.value }}</span>
+        </ng-container>
+      </div>
+
+      <!-- Editable textarea -->
+      <textarea
+        #ta
+        class="editor"
+        rows="10"
+        [(ngModel)]="text"
+        (input)="onInput()"
+        (scroll)="onScroll()"
+        (keyup)="onCaretMove()"
+        (click)="onCaretMove()"
+        (keydown)="onKeyDown($event)"
+        spellcheck="false"
+        placeholder="Type here…"
+      ></textarea>
+
+      <!-- Suggestions dropdown (single pattern for 1 or many) -->
+      <div
+        class="dropdown"
+        *ngIf="dropdown.open && activeReplacements().length"
+        [style.left.px]="dropdown.x"
+        [style.top.px]="dropdown.y"
+      >
+        <div class="dropdown-hdr">{{ activeMessage() }}</div>
+
+        <button
+          type="button"
+          class="opt"
+          *ngFor="let r of activeReplacements(); let i = index"
+          [class.active]="i===dropdown.selectedIdx"
+          (mousedown)="$event.preventDefault()"
+          (click)="applySuggestion(r.value)"
+        >
+          <span class="val">{{ r.value }}</span>
+          <span class="desc" *ngIf="r.shortDescription"> — {{ r.shortDescription }}</span>
+        </button>
+
+        <div class="dropdown-hint">Enter = apply • Esc = close • Tab = next error</div>
+      </div>
+    </div>
+
+    <div class="meta">
+      <div><b>Errors found:</b> {{ matches.length }}</div>
+      <div class="tip">Tip: press <b>Tab</b> / <b>Shift+Tab</b> to jump between errors.</div>
+    </div>
+  </section>
+
+<section class="details" *ngIf="matches.length">
+  <h2>Detected Issues</h2>
+  <div class="issues">
+    <div class="issue" *ngFor="let m of matches; let idx = index">
+      <div class="issue-h">
+        <span class="pill">#{{ idx + 1 }}</span>
+        <span class="msg">{{ m.message }}</span>
+      </div>
+      <div class="issue-meta">
+        <span><b>offset</b>: {{ m.offset }}</span>
+        <span><b>length</b>: {{ m.length }}</span>
+        <span *ngIf="m.rule?.id"><b>rule</b>: {{ m.rule?.id }}</span>
+      </div>
+      <div class="issue-repl" *ngIf="m.replacements?.length">
+        <b>suggestions:</b>
+        <span class="sug" *ngFor="let r of (m.replacements | slice:0:8); let last = last">
+          {{ r.value }}<span *ngIf="!last">, </span>
+        </span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="logs">
+  <h2>Request/Response Logs</h2>
+  <div class="log-grid">
+    <div class="log-col">
+      <div class="log-h">Last Request</div>
+      <pre class="pre">{{ lastRequest | json }}</pre>
+    </div>
+    <div class="log-col">
+      <div class="log-h">Last Response</div>
+      <pre class="pre">{{ lastResponse | json }}</pre>
+    </div>
+  </div>
+  <div class="log-err" *ngIf="lastError">
+    <div class="log-h">Last Error</div>
+    <pre class="pre err">{{ lastError | json }}</pre>
+  </div>
+  <p class="muted">Note: browser logs are in DevTools Console (F12). Proxy logs (logLevel: debug) appear in the terminal where you run <code>ng serve</code>.</p>
+</section>
+
+  <section class="compare">
+    <h2>Original vs Corrected</h2>
+
+    <div class="cols" *ngIf="originalText; else emptyCompare">
+      <div class="col">
+        <div class="col-h">Original</div>
+        <div class="diff">
+          <ng-container *ngFor="let t of diffLeft">
+            <span [class.same]="t.kind==='same'" [class.del]="t.kind==='del'">{{ t.text }}</span>
+          </ng-container>
+        </div>
+      </div>
+
+      <div class="col">
+        <div class="col-h">Corrected</div>
+        <div class="diff">
+          <ng-container *ngFor="let t of diffRight">
+            <span [class.same]="t.kind==='same'" [class.add]="t.kind==='add'">{{ t.text }}</span>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+
+    <ng-template #emptyCompare>
+      <p class="muted">Click <b>Check Grammar</b> to capture the “Original” baseline, then apply suggestions to see changes.</p>
+    </ng-template>
+  </section>
+</div>

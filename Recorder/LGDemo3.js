@@ -1,0 +1,35 @@
+Feature('"LGDemo1"');
+Before(() => {
+
+    });
+Scenario(("LGDemo1"), async ({ I }) => {
+  I.resizeWindow(1987, 994)
+  I.amOnPage("http://localhost:4200/")
+  I.click("button:nth-of-type(1)")
+  I.click("textarea")
+  I.click("div.editor-wrap button")
+  I.click("textarea")
+  I.pressKeyDown('ESCAPE')
+  I.pressKeyUp('ESCAPE')
+  I.click("textarea")
+  I.pressKeyDown('ESCAPE')
+  I.pressKeyUp('ESCAPE')
+  I.click("textarea")
+  I.pressKeyDown('TAB')
+  I.pressKeyUp('TAB')
+  I.click("button:nth-of-type(4) > span")
+  I.click("textarea")
+  I.pressKeyDown('TAB')
+  I.pressKeyUp('TAB')
+  I.click("button:nth-of-type(3)")
+  I.click("textarea")
+  I.pressKeyDown('TAB')
+  I.pressKeyUp('TAB')
+  I.click("button:nth-of-type(4) > span")
+  I.click("textarea")
+  I.pressKeyDown('TAB')
+  I.pressKeyUp('TAB')
+  I.click("button:nth-of-type(4)")
+  I.click("textarea")
+  I.click("div.dropdown span")
+  });

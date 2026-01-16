@@ -1,0 +1,144 @@
+.page { max-width: 980px; margin: 24px auto; padding: 0 16px; font-family: system-ui, sans-serif; }
+
+.hdr h1 { margin: 0; font-size: 22px; }
+.hdr p { margin: 6px 0 18px; color: #555; }
+
+.editor-card {
+  border: 1px solid #ddd; border-radius: 12px; padding: 12px; background: #fff;
+  box-shadow: 0 1px 8px rgba(0,0,0,0.04);
+}
+
+.toolbar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+button { padding: 8px 12px; border-radius: 10px; border: 1px solid #222; background: #222; color: #fff; cursor: pointer; }
+button.secondary { background: #fff; color: #222; }
+button:disabled { opacity: .6; cursor: not-allowed; }
+.status { color: #444; }
+.error { color: #b00020; }
+
+
+.editor-wrap {
+  position: relative;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fff;
+}
+
+/* Both layers must match typography + padding + sizing exactly */
+.highlights, .editor {
+  font: 15px/1.5 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  padding: 12px;
+  width: 100%;
+  min-height: 260px; /* ~10 rows */
+  box-sizing: border-box;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Underlay: absolutely positioned so it NEVER takes layout space */
+.highlights {
+  position: absolute;
+  inset: 0;
+  overflow: auto;
+  background: transparent;
+  color: transparent;
+  pointer-events: none;
+  scrollbar-gutter: stable;
+}
+
+/* Text nodes in the underlay should not show; marks will show via background */
+.hl-text { color: transparent; }
+
+/* Overlay textarea: make its text transparent but still visible via text-shadow */
+.editor {
+  position: relative;
+  resize: vertical;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: transparent;
+  text-shadow: 0 0 0 #111;
+  caret-color: #111;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.hl-error {
+  background: rgba(255, 193, 7, 0.35);
+  box-shadow: inset 0 -2px 0 rgba(255, 140, 0, 0.9);
+  color: transparent;
+}
+
+
+.hl-error {
+  background: rgba(255, 193, 7, 0.35);
+  /* avoid border-bottom because it can change line box height and cause overlay misalignment */
+  box-shadow: inset 0 -2px 0 rgba(255, 140, 0, 0.9);
+  color: transparent;
+}
+
+.dropdown {
+  position: fixed;
+  z-index: 9999;
+  width: min(420px, calc(100vw - 24px));
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+  padding: 8px;
+}
+
+.dropdown-hdr { font-size: 12px; color: #555; padding: 4px 6px 8px; }
+
+.opt {
+  width: 100%;
+  text-align: left;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+}
+.opt.active { border-color: #222; background: #f6f6f6; }
+.val { font-weight: 600; }
+.desc { color: #666; font-weight: 400; }
+.dropdown-hint { font-size: 11px; color: #666; padding: 6px; }
+
+.meta { display: flex; justify-content: space-between; margin-top: 10px; color: #444; }
+.tip { color: #666; }
+
+.compare { margin-top: 18px; }
+.compare h2 { margin: 0 0 10px; font-size: 18px; }
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.col { border: 1px solid #ddd; border-radius: 12px; padding: 10px; background: #fff; }
+.col-h { font-weight: 700; margin-bottom: 6px; }
+.diff { white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, Menlo, Consolas, monospace; }
+
+.same { color: #111; }
+.add { background: rgba(76, 175, 80, 0.25); border-radius: 6px; padding: 0 2px; }
+.del { background: rgba(244, 67, 54, 0.20); border-radius: 6px; padding: 0 2px; text-decoration: line-through; }
+
+.muted { color: #666; }
+
+.details { margin-top: 18px; }
+.details h2 { margin: 0 0 10px; font-size: 18px; }
+.issues { display: grid; gap: 10px; }
+.issue { border: 1px solid #ddd; border-radius: 12px; padding: 10px; background: #fff; }
+.issue-h { display: flex; gap: 8px; align-items: baseline; }
+.pill { font-size: 12px; background: #eee; padding: 2px 8px; border-radius: 999px; }
+.msg { font-weight: 700; }
+.issue-meta { display: flex; gap: 14px; flex-wrap: wrap; color: #555; margin-top: 6px; font-size: 12px; }
+.issue-repl { margin-top: 6px; color: #444; font-size: 12px; }
+
+.logs { margin-top: 18px; }
+.logs h2 { margin: 0 0 10px; font-size: 18px; }
+.log-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.log-col { border: 1px solid #ddd; border-radius: 12px; padding: 10px; background: #fff; }
+.log-h { font-weight: 700; margin-bottom: 6px; }
+.pre { margin: 0; max-height: 260px; overflow: auto; white-space: pre-wrap; word-wrap: break-word;
+       font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px; background: #fafafa;
+       border: 1px solid #eee; padding: 8px; border-radius: 10px; }
+.pre.err { background: #fff5f5; border-color: #ffd6d6; }
+.log-err { margin-top: 12px; border: 1px solid #ffd6d6; background: #fff; border-radius: 12px; padding: 10px; }
+@media (max-width: 860px) { .log-grid { grid-template-columns: 1fr; } }
