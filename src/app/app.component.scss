@@ -116,8 +116,8 @@ button:disabled { opacity: .6; cursor: not-allowed; }
 .diff { white-space: pre-wrap; word-wrap: break-word; font-family: ui-monospace, Menlo, Consolas, monospace; }
 
 .same { color: #111; }
-.add { background: rgba(76, 175, 80, 0.25); border-radius: 6px; padding: 0 2px; }
-.del { background: rgba(244, 67, 54, 0.20); border-radius: 6px; padding: 0 2px; text-decoration: line-through; }
+.add { background: rgba(76, 175, 80, 0.35); border-radius: 6px; padding: 0 2px; }
+.del { background: rgba(244, 67, 54, 0.28); border-radius: 6px; padding: 0 2px; text-decoration: line-through; }
 
 .muted { color: #666; }
 
